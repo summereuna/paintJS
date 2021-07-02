@@ -3,7 +3,7 @@
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext('2d');
 const colors = document.getElementsByClassName("jsColor");
-
+const range = document.getElementById("jsRange");
 
 //pixel modifier에도 canvas사이즈 만큰 사이즈 줘야 그림 그려짐
 canvas.width = 500;
@@ -45,6 +45,11 @@ function handleColorClick(event){
     ctx.strokeStyle = color;
 }
 
+function handleRangeChange(event){
+    const lineSize = event.target.value;
+    ctx.lineWidth = lineSize;
+}
+
 if (canvas) {
    //캔버스 위에 마우스가 있으면 감지하는 이벤트
     canvas.addEventListener("mousemove", onMouseMove);
@@ -59,3 +64,8 @@ if (canvas) {
 Array.from(colors).forEach(color => 
     color.addEventListener("click", handleColorClick)
     );
+
+
+    if (range) {
+        range.addEventListener("input", handleRangeChange);
+    }
