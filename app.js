@@ -5,6 +5,7 @@ const ctx = canvas.getContext('2d');
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
 
 const INITIAL_COLOR = "black";
 const CANVAS_SIZE = 500;
@@ -77,6 +78,14 @@ function handleCM(event){
     event.preventDefault();
 }
 
+function handleSaveClick(){
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "paintJS[💜]";
+    link.click();
+}
+
 if (canvas) {
    //캔버스 위에 마우스가 있으면 감지하는 이벤트
     canvas.addEventListener("mousemove", onMouseMove);
@@ -103,4 +112,8 @@ if (range) {
 
 if (mode) {
     mode.addEventListener("click", handleModeClick);
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener("click", handleSaveClick);
 }
