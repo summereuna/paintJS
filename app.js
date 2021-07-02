@@ -4,20 +4,26 @@ const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext('2d');
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
+const mode = document.getElementById("jsMode");
 
+const INITIAL_COLOR = "black";
+const CANVAS_SIZE = 500;
 //pixel modifier에도 canvas사이즈 만큰 사이즈 줘야 그림 그려짐
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
 /*
 canvas.width = document.getElementsByClassName("canvas")[0].offsetWidth;
 canvas.height = document.getElementsByClassName("canvas")[0].offsetHeight;
 */
-
 //default 설정
-ctx.strokeStyle = "black";
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
 
 let painting = false;
+let filling = false;
 
 function startPainting(){
     painting = true;
@@ -43,11 +49,32 @@ function onMouseMove(event){
 function handleColorClick(event){
     const color = event.target.style.backgroundColor;
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
 }
 
 function handleRangeChange(event){
     const lineSize = event.target.value;
     ctx.lineWidth = lineSize;
+}
+
+function handleModeClick(){
+    if(filling === true){
+        filling = false;
+        mode.innerText = "Fill";
+    } else {
+        filling = true;
+        mode.innerText = "Paint";
+    }
+}
+
+function handleCanvasClick(){
+    if (filling) {
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    }
+}
+
+function handleCM(event){
+    event.preventDefault();
 }
 
 if (canvas) {
@@ -59,6 +86,10 @@ if (canvas) {
     canvas.addEventListener("mouseup", stopPainting);
     //마우스 떠나면 페인팅 안되게하는 이벤트
     canvas.addEventListener("mouseleave", stopPainting);
+    //fill로 캔버스 채우는 이벤트
+    canvas.addEventListener("click", handleCanvasClick);
+    //오른쪽 마우스 클릭 금지
+    canvas.addEventListener("contextmenu", handleCM);
 }
 
 Array.from(colors).forEach(color => 
@@ -66,6 +97,10 @@ Array.from(colors).forEach(color =>
     );
 
 
-    if (range) {
-        range.addEventListener("input", handleRangeChange);
-    }
+if (range) {
+    range.addEventListener("input", handleRangeChange);
+}
+
+if (mode) {
+    mode.addEventListener("click", handleModeClick);
+}
